@@ -1,5 +1,12 @@
 import {
-  LayoutDashboard, ClipboardList, Users, Car, Wallet, Package, BarChart3, Settings,
+  LayoutDashboard,
+  ClipboardList,
+  Users,
+  Car,
+  Wallet,
+  Package,
+  BarChart3,
+  Settings,
   type LucideIcon,
 } from "lucide-react";
 
@@ -15,3 +22,7 @@ export const NAV: NavItem[] = [
   { to: "/app/relatorios", label: "Relatórios", icon: BarChart3 },
   { to: "/app/configuracoes", label: "Configurações", icon: Settings },
 ];
+
+export function isActive(path: string, to: string) {
+  return to === "/app" ? path === "/app" || path === "/app/" : path.startsWith(to);
+}

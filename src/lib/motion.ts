@@ -1,5 +1,5 @@
 import { useReducedMotion } from "framer-motion";
-import { usePrefs } from "./prefs";
+import { usePrefs } from "@/stores/preferences.store";
 
 /** Effective motion level: user setting, downgraded by OS prefers-reduced-motion. */
 export function useMotionLevel() {

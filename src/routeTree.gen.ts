@@ -19,6 +19,8 @@ import { Route as AppFinanceiroRouteImport } from './routes/app.financeiro'
 import { Route as AppOrdensRouteImport } from './routes/app.ordens'
 import { Route as AppRelatoriosRouteImport } from './routes/app.relatorios'
 import { Route as AppVeiculosRouteImport } from './routes/app.veiculos'
+import { Route as AppOrdensIndexRouteImport } from './routes/app.ordens.index'
+import { Route as AppOrdensIdRouteImport } from './routes/app.ordens.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -70,6 +72,16 @@ const AppVeiculosRoute = AppVeiculosRouteImport.update({
   path: '/veiculos',
   getParentRoute: () => AppRoute,
 } as any)
+const AppOrdensIndexRoute = AppOrdensIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppOrdensRoute,
+} as any)
+const AppOrdensIdRoute = AppOrdensIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppOrdensRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -78,10 +90,12 @@ export interface FileRoutesByFullPath {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/estoque': typeof AppEstoqueRoute
   '/app/financeiro': typeof AppFinanceiroRoute
-  '/app/ordens': typeof AppOrdensRoute
+  '/app/ordens': typeof AppOrdensRouteWithChildren
   '/app/relatorios': typeof AppRelatoriosRoute
   '/app/veiculos': typeof AppVeiculosRoute
   '/app/': typeof AppIndexRoute
+  '/app/ordens/$id': typeof AppOrdensIdRoute
+  '/app/ordens/': typeof AppOrdensIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -89,10 +103,11 @@ export interface FileRoutesByTo {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/estoque': typeof AppEstoqueRoute
   '/app/financeiro': typeof AppFinanceiroRoute
-  '/app/ordens': typeof AppOrdensRoute
   '/app/relatorios': typeof AppRelatoriosRoute
   '/app/veiculos': typeof AppVeiculosRoute
   '/app': typeof AppIndexRoute
+  '/app/ordens/$id': typeof AppOrdensIdRoute
+  '/app/ordens': typeof AppOrdensIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -102,10 +117,12 @@ export interface FileRoutesById {
   '/app/configuracoes': typeof AppConfiguracoesRoute
   '/app/estoque': typeof AppEstoqueRoute
   '/app/financeiro': typeof AppFinanceiroRoute
-  '/app/ordens': typeof AppOrdensRoute
+  '/app/ordens': typeof AppOrdensRouteWithChildren
   '/app/relatorios': typeof AppRelatoriosRoute
   '/app/veiculos': typeof AppVeiculosRoute
   '/app/': typeof AppIndexRoute
+  '/app/ordens/$id': typeof AppOrdensIdRoute
+  '/app/ordens/': typeof AppOrdensIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -120,6 +137,8 @@ export interface FileRouteTypes {
     | '/app/relatorios'
     | '/app/veiculos'
     | '/app/'
+    | '/app/ordens/$id'
+    | '/app/ordens/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -127,10 +146,11 @@ export interface FileRouteTypes {
     | '/app/configuracoes'
     | '/app/estoque'
     | '/app/financeiro'
-    | '/app/ordens'
     | '/app/relatorios'
     | '/app/veiculos'
     | '/app'
+    | '/app/ordens/$id'
+    | '/app/ordens'
   id:
     | '__root__'
     | '/'
@@ -143,6 +163,8 @@ export interface FileRouteTypes {
     | '/app/relatorios'
     | '/app/veiculos'
     | '/app/'
+    | '/app/ordens/$id'
+    | '/app/ordens/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -222,15 +244,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppVeiculosRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/ordens/': {
+      id: '/app/ordens/'
+      path: '/'
+      fullPath: '/app/ordens/'
+      preLoaderRoute: typeof AppOrdensIndexRouteImport
+      parentRoute: typeof AppOrdensRoute
+    }
+    '/app/ordens/$id': {
+      id: '/app/ordens/$id'
+      path: '/$id'
+      fullPath: '/app/ordens/$id'
+      preLoaderRoute: typeof AppOrdensIdRouteImport
+      parentRoute: typeof AppOrdensRoute
+    }
   }
 }
+
+interface AppOrdensRouteChildren {
+  AppOrdensIdRoute: typeof AppOrdensIdRoute
+  AppOrdensIndexRoute: typeof AppOrdensIndexRoute
+}
+
+const AppOrdensRouteChildren: AppOrdensRouteChildren = {
+  AppOrdensIdRoute: AppOrdensIdRoute,
+  AppOrdensIndexRoute: AppOrdensIndexRoute,
+}
+
+const AppOrdensRouteWithChildren = AppOrdensRoute._addFileChildren(
+  AppOrdensRouteChildren,
+)
 
 interface AppRouteChildren {
   AppClientesRoute: typeof AppClientesRoute
   AppConfiguracoesRoute: typeof AppConfiguracoesRoute
   AppEstoqueRoute: typeof AppEstoqueRoute
   AppFinanceiroRoute: typeof AppFinanceiroRoute
-  AppOrdensRoute: typeof AppOrdensRoute
+  AppOrdensRoute: typeof AppOrdensRouteWithChildren
   AppRelatoriosRoute: typeof AppRelatoriosRoute
   AppVeiculosRoute: typeof AppVeiculosRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -241,7 +291,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppConfiguracoesRoute: AppConfiguracoesRoute,
   AppEstoqueRoute: AppEstoqueRoute,
   AppFinanceiroRoute: AppFinanceiroRoute,
-  AppOrdensRoute: AppOrdensRoute,
+  AppOrdensRoute: AppOrdensRouteWithChildren,
   AppRelatoriosRoute: AppRelatoriosRoute,
   AppVeiculosRoute: AppVeiculosRoute,
   AppIndexRoute: AppIndexRoute,

@@ -12,11 +12,27 @@ const TONES: Record<Tone, { cls: string; icon: LucideIcon }> = {
 };
 
 /** Status always shown with text + icon, never color alone. */
-export function StatusPill({ tone, children, icon, className }: { tone: Tone; children: React.ReactNode; icon?: LucideIcon; className?: string }) {
+export function StatusPill({
+  tone,
+  children,
+  icon,
+  className,
+}: {
+  tone: Tone;
+  children: React.ReactNode;
+  icon?: LucideIcon;
+  className?: string;
+}) {
   const t = TONES[tone];
   const Icon = icon ?? t.icon;
   return (
-    <span className={cn("inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold", t.cls, className)}>
+    <span
+      className={cn(
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold",
+        t.cls,
+        className,
+      )}
+    >
       <Icon className="size-3.5" aria-hidden />
       {children}
     </span>

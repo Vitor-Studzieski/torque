@@ -16,7 +16,9 @@ function AppLayout() {
         <div className="min-w-0 flex-1">
           <Topbar />
           <main className="mx-auto max-w-[1400px] px-4 pb-28 pt-6 sm:px-6 lg:pb-12">
-            <PageTransition><Outlet /></PageTransition>
+            <PageTransition>
+              <Outlet />
+            </PageTransition>
           </main>
         </div>
       </div>
