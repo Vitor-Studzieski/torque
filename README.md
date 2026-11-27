@@ -14,11 +14,14 @@ npm run dev
 O Vite informa a URL local ao iniciar. Comandos adicionais:
 
 ```bash
-npm run typecheck
 npm run lint
 npm run build
 npm run preview
 ```
+
+`npm run preview` serve a compilação de produção pelo preview do Vite/Nitro. `npm run start` inicia a saída Node do Nitro.
+
+Para configurar as credenciais locais em um checkout novo, copie `.env.example` para `.env.local` e preencha as variáveis. O arquivo local é ignorado pelo Git.
 
 ## Telas
 
@@ -31,7 +34,7 @@ npm run preview
 - **Financeiro (`/app/financeiro`)** — entradas/saídas, vencimentos, filtros, baixa e lançamentos.
 - **Estoque e peças (`/app/estoque`)** — catálogo, custo/preço, alerta de mínimo e movimentação demonstrativa.
 - **Relatórios (`/app/relatorios`)** — OS por etapa, movimento financeiro, serviços e produtividade com período selecionável.
-- **Configurações (`/app/configuracoes`)** — dados da oficina, tema, movimento e restauração da demonstração.
+- **Configurações (`/app/configuracoes`)** — dados da oficina, tema e movimento.
 
 ## Estrutura
 
@@ -41,25 +44,29 @@ src/
     layout/       # navegação, busca global, topbar e shell
     torque/       # componentes compartilhados da identidade Torque
     ui/           # primitivos de interface
-  data/           # dados fictícios tipados e fábrica do conjunto inicial
+  data/           # listas de checklist
   features/       # páginas e componentes por módulo
   lib/            # formatação e regras compartilhadas de domínio
   routes/         # rotas baseadas em arquivos do TanStack Router
-  stores/         # Zustand persistido para preferências e dados da oficina
+  stores/         # Zustand para preferências e estado da demonstração
   styles.css      # tokens, tema e estilos globais
-  router.tsx
-  server.ts
-  start.ts
-  routeTree.gen.ts # gerado pelo TanStack Router
+  router.jsx
+  server.js
+  start.js
+  routeTree.gen.ts # gerado pelo TanStack Start; não editar manualmente
 docs/
   DESIGN_NOTES.md
 ```
 
 ## Dados e demonstração
 
-O conjunto inicial é criado em `src/data/demo-data.ts` e inclui clientes, veículos, ordens, peças, lançamentos e mecânicos com relações compartilhadas entre as telas. Alterações ficam no `localStorage` deste navegador por meio do Zustand. Em **Configurações → Restaurar dados de demonstração**, confirme a restauração para repor o conjunto inicial.
+O aplicativo não cria mais cadastros fictícios. A migração do Zustand remove os registros de exemplo conhecidos que já estavam salvos no navegador e mantém os registros criados manualmente na demonstração. Preferências e dados do modo demonstração permanecem no `localStorage`; em uma conta autenticada com vínculo ativo, os dados operacionais vêm do PostgreSQL.
 
-O produto não usa backend, autenticação real, serviços externos ou upload real. Ações como envio de orçamento são identificadas como simulação. Fotos são ilustrações locais em gradientes e SVG, com rótulo de conteúdo demonstrativo. O saldo de estoque só baixa quando uma peça é marcada como aplicada na OS.
+O projeto Neon e o esquema PostgreSQL estão conectados aos módulos de clientes, veículos, OS, financeiro, estoque e oficina por operações autenticadas no servidor. A conexão local usa a credencial privada em `.env.local`; em produção, Vercel recebe `DATABASE_URL` como variável privada com a URL agrupada do Neon e a role restrita `torque_app_runtime_restricted`. A fundação também inclui autenticação Clerk por convite, associação de membros no PostgreSQL e gestão de convites para responsáveis autenticados, conforme [docs/BACKEND.md](docs/BACKEND.md). A demonstração local não exige autenticação e continua isolada do banco. Envio de orçamento não envia mensagens ao cliente. No modo demonstração, as fotos da OS ficam no IndexedDB local; em contas conectadas, o código envia as fotos ao bucket privado Supabase Storage e emite links temporários após autorização, quando as variáveis privadas do armazenamento estiverem configuradas. O saldo de estoque é atualizado junto com o histórico de movimentações quando uma peça aprovada é aplicada à OS.
+
+## Preparação para Vercel
+
+TanStack Start usa Nitro, e `vercel.json` define o preset do framework e executa as funções em São Paulo (`gru1`), próximo ao Neon. O projeto `torque` já existe na Vercel. `DATABASE_URL` e as variáveis do Supabase Storage estão configuradas somente em Production. Antes do primeiro deploy, conecte este repositório ao projeto e configure o Clerk. As chaves Clerk de produção exigem um domínio próprio controlado; até lá, use chaves de desenvolvimento em previews. Use uma branch Neon isolada para previews e mantenha produção na branch operacional.
 
 ## Decisões e suposições
 
@@ -67,8 +74,8 @@ O produto não usa backend, autenticação real, serviços externos ou upload re
 - Dados persistidos usam `skipHydration` e reidratação após a montagem no root para manter a resposta SSR determinística.
 - Manrope e JetBrains Mono são carregadas de pacotes npm locais para evitar fontes remotas; são as únicas dependências acrescentadas para a direção visual.
 - Valores financeiros são demonstrativos e informativos; não representam apuração contábil, cobrança ou pagamento real.
-- Evidências fotográficas são placeholders gerados localmente; anexar arquivos reais fica fora do protótipo.
+- Novas OS começam sem evidências; fotos podem ser anexadas localmente a cada OS e permanecem no IndexedDB deste navegador.
 
 ## Stack
 
-Vite, React, TypeScript strict, TanStack Start/Router, Tailwind CSS 4, Zustand, Framer Motion, Recharts e lucide-react.
+Vite, React, JavaScript ES modules com JSX, TanStack Start/Router com Nitro, Vercel Functions em Node.js, PostgreSQL no Neon, Supabase Storage, Clerk, Tailwind CSS 4, Zustand, Framer Motion, Recharts e lucide-react.

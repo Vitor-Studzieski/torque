@@ -8,19 +8,21 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppRouteImport } from './routes/app'
-import { Route as AppIndexRouteImport } from './routes/app.index'
-import { Route as AppClientesRouteImport } from './routes/app.clientes'
-import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes'
-import { Route as AppEstoqueRouteImport } from './routes/app.estoque'
-import { Route as AppFinanceiroRouteImport } from './routes/app.financeiro'
-import { Route as AppOrdensRouteImport } from './routes/app.ordens'
-import { Route as AppRelatoriosRouteImport } from './routes/app.relatorios'
-import { Route as AppVeiculosRouteImport } from './routes/app.veiculos'
-import { Route as AppOrdensIndexRouteImport } from './routes/app.ordens.index'
-import { Route as AppOrdensIdRouteImport } from './routes/app.ordens.$id'
+import { Route as rootRouteImport } from './routes/__root.jsx'
+import { Route as IndexRouteImport } from './routes/index.jsx'
+import { Route as AppRouteImport } from './routes/app.jsx'
+import { Route as AppIndexRouteImport } from './routes/app.index.jsx'
+import { Route as AppClientesRouteImport } from './routes/app.clientes.jsx'
+import { Route as AppConfiguracoesRouteImport } from './routes/app.configuracoes.jsx'
+import { Route as AppEstoqueRouteImport } from './routes/app.estoque.jsx'
+import { Route as AppFinanceiroRouteImport } from './routes/app.financeiro.jsx'
+import { Route as AppOrdensRouteImport } from './routes/app.ordens.jsx'
+import { Route as AppRelatoriosRouteImport } from './routes/app.relatorios.jsx'
+import { Route as AppVeiculosRouteImport } from './routes/app.veiculos.jsx'
+import { Route as ConviteSplatRouteImport } from './routes/convite.$.jsx'
+import { Route as EntrarSplatRouteImport } from './routes/entrar.$.jsx'
+import { Route as AppOrdensIndexRouteImport } from './routes/app.ordens.index.jsx'
+import { Route as AppOrdensIdRouteImport } from './routes/app.ordens.$id.jsx'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -72,6 +74,16 @@ const AppVeiculosRoute = AppVeiculosRouteImport.update({
   path: '/veiculos',
   getParentRoute: () => AppRoute,
 } as any)
+const ConviteSplatRoute = ConviteSplatRouteImport.update({
+  id: '/convite/$',
+  path: '/convite/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntrarSplatRoute = EntrarSplatRouteImport.update({
+  id: '/entrar/$',
+  path: '/entrar/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AppOrdensIndexRoute = AppOrdensIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -93,6 +105,8 @@ export interface FileRoutesByFullPath {
   '/app/ordens': typeof AppOrdensRouteWithChildren
   '/app/relatorios': typeof AppRelatoriosRoute
   '/app/veiculos': typeof AppVeiculosRoute
+  '/convite/$': typeof ConviteSplatRoute
+  '/entrar/$': typeof EntrarSplatRoute
   '/app/': typeof AppIndexRoute
   '/app/ordens/$id': typeof AppOrdensIdRoute
   '/app/ordens/': typeof AppOrdensIndexRoute
@@ -105,6 +119,8 @@ export interface FileRoutesByTo {
   '/app/financeiro': typeof AppFinanceiroRoute
   '/app/relatorios': typeof AppRelatoriosRoute
   '/app/veiculos': typeof AppVeiculosRoute
+  '/convite/$': typeof ConviteSplatRoute
+  '/entrar/$': typeof EntrarSplatRoute
   '/app': typeof AppIndexRoute
   '/app/ordens/$id': typeof AppOrdensIdRoute
   '/app/ordens': typeof AppOrdensIndexRoute
@@ -120,6 +136,8 @@ export interface FileRoutesById {
   '/app/ordens': typeof AppOrdensRouteWithChildren
   '/app/relatorios': typeof AppRelatoriosRoute
   '/app/veiculos': typeof AppVeiculosRoute
+  '/convite/$': typeof ConviteSplatRoute
+  '/entrar/$': typeof EntrarSplatRoute
   '/app/': typeof AppIndexRoute
   '/app/ordens/$id': typeof AppOrdensIdRoute
   '/app/ordens/': typeof AppOrdensIndexRoute
@@ -136,6 +154,8 @@ export interface FileRouteTypes {
     | '/app/ordens'
     | '/app/relatorios'
     | '/app/veiculos'
+    | '/convite/$'
+    | '/entrar/$'
     | '/app/'
     | '/app/ordens/$id'
     | '/app/ordens/'
@@ -148,6 +168,8 @@ export interface FileRouteTypes {
     | '/app/financeiro'
     | '/app/relatorios'
     | '/app/veiculos'
+    | '/convite/$'
+    | '/entrar/$'
     | '/app'
     | '/app/ordens/$id'
     | '/app/ordens'
@@ -162,6 +184,8 @@ export interface FileRouteTypes {
     | '/app/ordens'
     | '/app/relatorios'
     | '/app/veiculos'
+    | '/convite/$'
+    | '/entrar/$'
     | '/app/'
     | '/app/ordens/$id'
     | '/app/ordens/'
@@ -170,6 +194,8 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
+  ConviteSplatRoute: typeof ConviteSplatRoute
+  EntrarSplatRoute: typeof EntrarSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -244,6 +270,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppVeiculosRouteImport
       parentRoute: typeof AppRoute
     }
+    '/convite/$': {
+      id: '/convite/$'
+      path: '/convite/$'
+      fullPath: '/convite/$'
+      preLoaderRoute: typeof ConviteSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrar/$': {
+      id: '/entrar/$'
+      path: '/entrar/$'
+      fullPath: '/entrar/$'
+      preLoaderRoute: typeof EntrarSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/app/ordens/': {
       id: '/app/ordens/'
       path: '/'
@@ -302,13 +342,15 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
+  ConviteSplatRoute: ConviteSplatRoute,
+  EntrarSplatRoute: EntrarSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
+import type { getRouter } from './router.jsx'
+import type { startInstance } from './start.js'
 declare module '@tanstack/react-start' {
   interface Register {
     ssr: true

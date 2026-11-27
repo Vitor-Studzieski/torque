@@ -3,21 +3,30 @@
   "private": true,
   "sideEffects": false,
   "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "start": "node .output/server/index.mjs",
     "preview": "vite preview",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "security:audit": "npm audit --audit-level=high",
+    "db:migrate": "node scripts/db-migrate.js",
+    "db:bootstrap": "node scripts/bootstrap-workshop.js"
   },
   "overrides": {
     "rolldown": "1.2.1"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1178.0",
+    "@aws-sdk/s3-request-presigner": "^3.1178.0",
+    "@clerk/tanstack-react-start": "^1.7.14",
     "@fontsource/jetbrains-mono": "^5.3.0",
     "@fontsource/manrope": "^5.3.0",
     "@hookform/resolvers": "^5.2.2",
@@ -60,28 +69,26 @@
     "framer-motion": "^14.14.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.575.0",
+    "pg": "^8.23.1",
     "react": "^19.2.0",
     "react-day-picker": "^9.14.0",
     "react-dom": "^19.2.0",
     "react-hook-form": "^7.71.2",
     "react-resizable-panels": "^4.6.5",
     "recharts": "^2.15.4",
+    "sharp": "0.35.5",
     "sonner": "^2.0.8",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.1",
     "tw-animate-css": "^1.3.4",
     "vaul": "^1.1.2",
-    "vite-tsconfig-paths": "^6.0.2",
-    "zod": "^3.25.76",
+    "zod": "4.6.7",
     "zustand": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@testing-library/jest-dom": "^6.6.0",
     "@testing-library/react": "^16.0.0",
-    "@types/node": "^22.16.5",
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.1",
@@ -92,9 +99,7 @@
     "jsdom": "^20.0.3",
     "nitro": "3.0.260603-beta",
     "prettier": "^3.7.3",
-    "typescript": "^5.8.3",
-    "typescript-eslint": "^8.56.1",
-    "vite": "8.1.5",
+    "vite": "8.4.0",
     "vitest": "^4.1.10"
   }
 }

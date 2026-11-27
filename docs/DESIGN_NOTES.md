@@ -23,4 +23,4 @@
 
 ## Limites de implementação
 
-Imagens de entrada, avarias, peças e entrega são ilustrações/placeholders gerados localmente e identificados como demonstração. Não há chamadas de runtime para sites de inspiração, upload real ou dependência de fontes remotas.
+Imagens iniciais são ilustrações/placeholders locais identificados como demonstração. Fotos escolhidas pelo usuário são otimizadas no navegador e guardadas no IndexedDB local, sem upload para um servidor. Fontes são empacotadas no projeto; não há chamadas de runtime para sites de inspiração ou dependência de fontes remotas.
